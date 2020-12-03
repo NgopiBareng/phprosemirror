@@ -2,8 +2,8 @@
 
 namespace Phprosemirror\Renderers\Nodes;
 
-class Paragraph extends Node {
+class ListItem extends Node {
     public function toDOM($node) {
-        return ['p', 0];
+        return ['li', 0];
     }
 }

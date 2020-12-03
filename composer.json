@@ -2,8 +2,8 @@
     "name": "ngopibareng/phprosemirror",
     "description": "Work with ProseMirror JSON in PHP",
     "keywords": [
-        "ngopibareng",
-        "phprosemirror"
+        "prosemirror",
+        "php"
     ],
     "homepage": "https://github.com/ngopibareng/phprosemirror",
     "license": "The Unlicense",
@@ -23,12 +23,12 @@
     },
     "autoload": {
         "psr-4": {
-            "NgopiBareng\\Phprosemirror\\": "src"
+            "Phprosemirror\\": "src"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "NgopiBareng\\Phprosemirror\\Tests\\": "tests"
+            "Phprosemirror\\Tests\\": "tests"
         }
     },
     "scripts": {

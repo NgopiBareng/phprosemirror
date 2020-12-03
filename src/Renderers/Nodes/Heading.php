@@ -2,8 +2,8 @@
 
 namespace Phprosemirror\Renderers\Nodes;
 
-class Paragraph extends Node {
+class Heading extends Node {
     public function toDOM($node) {
-        return ['p', 0];
+        return ['h'.$node->attrs->level, 0];
     }
 }

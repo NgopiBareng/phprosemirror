@@ -1,6 +1,6 @@
 <?php
 
-namespace NgopiBareng\Phprosemirror\Tests;
+namespace Phprosemirror\Tests;
 
 use PHPUnit\Framework\TestCase;
 

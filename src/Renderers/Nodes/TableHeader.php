@@ -2,8 +2,8 @@
 
 namespace Phprosemirror\Renderers\Nodes;
 
-class Paragraph extends Node {
+class TableHeader extends Node {
     public function toDOM($node) {
-        return ['p', 0];
+        return ['th', 0];
     }
 }

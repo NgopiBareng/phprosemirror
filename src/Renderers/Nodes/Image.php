@@ -2,8 +2,8 @@
 
 namespace Phprosemirror\Renderers\Nodes;
 
-class Paragraph extends Node {
+class Image extends Node {
     public function toDOM($node) {
-        return ['p', 0];
+        return ['img', $node->attrs];
     }
 }
