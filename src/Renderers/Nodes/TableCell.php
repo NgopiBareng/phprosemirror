@@ -2,6 +2,8 @@
 
 namespace Phprosemirror\Renderers\Nodes;
 
+use Phprosemirror\Node;
+
 class TableCell extends Node {
     public function toDOM($node) {
         $attrs = [];

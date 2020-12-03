@@ -3,17 +3,17 @@
 namespace Phprosemirror;
 
 use Phprosemirror\Registry\Factory;
-use Phprosemirror\Renderers\PlainText;
+use stdClass;
 
 class Phprosemirror {
 
     protected $document;
-    protected $nodesRegistry;
-    protected $marksRegistry;
+    public $nodes;
+    public $marks;
 
     public function __construct() {
-        $this->nodesRegistry = Factory::buildNodesRegistry();
-        $this->marksRegistry = Factory::buildMarksRegistry();
+        $this->nodes = Factory::buildNodesRegistry();
+        $this->marks = Factory::buildMarksRegistry();
     }
 
     public function document($value) {
@@ -42,7 +42,7 @@ class Phprosemirror {
             $result->tag = $dom[0];
             $contents = [];
 
-            if(isset($dom[1]) && ((is_array($dom[1]) && !isset($dom[1][0])) || is_object($dom[1]))) {
+            if(isset($dom[1]) && ((is_array($dom[1]) && !isset($dom[1][0])) || $dom[1] instanceof stdClass)) {
                 $result->attrs = $dom[1];
                 $contents = array_slice($dom, 2);
             } else if(count($dom) > 1) {
@@ -87,7 +87,7 @@ class Phprosemirror {
                     }
                 }
 
-                $nodeRenderer = $this->nodesRegistry->get($node->type);
+                $nodeRenderer = $this->nodes->get($node->type);
                 if($nodeRenderer !== null) {
                     $dom = $nodeRenderer->toDOM($node);
                     $dom = $this->parseDOM($dom, $contentDOM);
@@ -99,7 +99,7 @@ class Phprosemirror {
                     if(!is_object($mark)) {
                         $mark = (object) $mark;
                     }
-                    $markRenderer = $this->marksRegistry->get($mark->type);
+                    $markRenderer = $this->marks->get($mark->type);
                     if($markRenderer !== null) {
                         $markDOM = $markRenderer->toDOM($mark);
                         if($dom instanceof PlainText) {
@@ -118,7 +118,7 @@ class Phprosemirror {
 
         $html = [];
         $attrs = '';
-        if(is_array($dom->attrs)) {
+        if(is_array($dom->attrs) || $dom->attrs instanceof stdClass) {
             foreach ($dom->attrs as $attr => $value) {
                 $attrs .= " $attr=\"$value\"";
             }

@@ -1,6 +1,6 @@
 <?php
 
-namespace Phprosemirror\Renderers\Marks;
+namespace Phprosemirror;
 
 use Phprosemirror\Helpers\StringHelper;
 use Phprosemirror\Renderers\RendererInterface;

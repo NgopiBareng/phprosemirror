@@ -1,6 +1,6 @@
 <?php
 
-namespace Phprosemirror\Renderers;
+namespace Phprosemirror;
 
 class PlainText {
     public $text;

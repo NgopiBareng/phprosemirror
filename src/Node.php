@@ -1,6 +1,6 @@
 <?php
 
-namespace Phprosemirror\Renderers\Nodes;
+namespace Phprosemirror;
 
 use Phprosemirror\Helpers\StringHelper;
 use Phprosemirror\Renderers\RendererInterface;
