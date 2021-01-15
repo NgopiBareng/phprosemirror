@@ -34,6 +34,19 @@ class RendererRegistry
     }
 
     /**
+     * @param string $renderer Renderer name
+     * @return bool
+     */
+    public function remove($renderer)
+    {
+        if(isset($this->renderers[$renderer])) {
+            unset($this->renderers[$renderer]);
+            return true;
+        }
+        return false;
+    }
+
+    /**
      * @param string $type
      * @return RendererInterface
      */

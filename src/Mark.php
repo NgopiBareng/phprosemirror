@@ -9,4 +9,8 @@ abstract class Mark implements RendererInterface {
     public static function name() {
         return StringHelper::toSnakeCase((new \ReflectionClass(static::class))->getShortName());
     }
+
+    public function getText($node) {
+        return null;
+    }
 }

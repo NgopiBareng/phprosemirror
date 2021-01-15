@@ -16,16 +16,38 @@ class Phprosemirror {
         $this->marks = Factory::buildMarksRegistry();
     }
 
-    public function document($value) {
-        if (is_string($value)) {
-            $value = json_decode($value);
-        } elseif (is_array($value)) {
-            $value = json_decode(json_encode($value));
+    /**
+     * Set ProseMirror Document from JSON
+     */
+    public function document($json) {
+        if (is_string($json)) {
+            $json = json_decode($json);
+        } elseif (is_array($json)) {
+            $json = json_decode(json_encode($json));
         }
 
-        $this->document = $value;
+        if(json_last_error() == JSON_ERROR_NONE) {
+            $this->document = $json;
+        }
 
         return $this;
+    }
+
+    /**
+     * Check document validity. The json requirement are `{"type": "doc", "content": []}`
+     * @param stdClass|null $document ProseMirror Document. Set to null to get current document.
+     * @return bool
+     */
+    public function isDocumentValid($document = null) {
+        if($document === null) $document = $this->document;
+        return (
+            isset($document) &&
+            is_object($document) &&
+            isset($document->type) &&
+            isset($document->content) &&
+            $document->type === 'doc' &&
+            is_array($document->content)
+        );
     }
 
     private function parseDOM($dom, $contentDOM) {
@@ -142,16 +164,93 @@ class Phprosemirror {
         return implode('', $html);
     }
 
-    public function toHTML($json) {
-        $this->document($json);
-        $html = [];
-        $content = (is_array($this->document->content) ? $this->document->content : []);
+    private function renderText($node) {
+        $text = [];
+        if(is_object($node)) {
+            if(isset($node->text)) {
+                $text[] = $node->text;
+            } else {
+                if(isset($node->content)) {
+                    foreach ($node->content as $content) {
+                        $text = array_merge($text, $this->renderText($content));
+                    }
+                }
 
-        foreach ($content as $node) {
-            $dom = $this->generateDOM($node);
-            $html[] = $this->renderDOM($dom);
+                $nodeRenderer = $this->nodes->get($node->type);
+                if($nodeRenderer !== null) {
+                    $nodeText = $nodeRenderer->getText($node);
+                    if(is_array($nodeText)) {
+                        $text = array_merge($text, $nodeText);
+                    } else if(is_string($nodeText)) {
+                        $text[] = $nodeText;
+                    }
+                }
+            }
+
+            if(isset($node->marks)) {
+                foreach ($node->marks as $mark) {
+                    if(!is_object($mark)) {
+                        $mark = (object) $mark;
+                    }
+                    $markRenderer = $this->marks->get($mark->type);
+                    if($markRenderer !== null) {
+                        $markText = $markRenderer->getText($mark);
+                        if(is_array($markText)) {
+                            $text = array_merge($text, $markText);
+                        } else if(is_string($markText)) {
+                            $text[] = $markText;
+                        }
+                    }
+                }
+            }
+        }
+        return $text;
+    }
+
+    /**
+     * Converts ProseMirror Document to HTML. Returns empty string if the document are invalid.
+     * @param string|null $json ProseMirror JSON
+     * @return string
+     */
+    public function toHTML($json = null) {
+        if($json !== null) {
+            $this->document($json);
+        }
+        $html = [];
+
+        if($this->isDocumentValid()) {
+            $content = $this->document->content;
+
+            foreach ($content as $node) {
+                $dom = $this->generateDOM($node);
+                $html[] = $this->renderDOM($dom);
+            }
         }
 
         return implode('', $html);
+    }
+
+    /**
+     * Get text from ProseMirror Document. Returns empty string if the document are invalid.
+     * @param string|null $json ProseMirror JSON
+     * @return string
+     */
+    public function toText($json = null) {
+        if($json !== null) {
+            $this->document($json);
+        }
+        $text = [];
+
+        if($this->isDocumentValid()) {
+            $content = $this->document->content;
+
+            foreach ($content as $node) {
+                $text = array_merge($text, $this->renderText($node));
+            }
+        }
+
+        return implode(' ', array_filter($text, function($string) {
+            return strlen($string) && $string !== ' ';
+        }));
     }
 }
