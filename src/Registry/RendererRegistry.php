@@ -45,6 +45,8 @@ class RendererRegistry
             foreach ($renderers as $renderer) {
                 $this->remove($renderer);
             }
+
+            return;
         }
         if(isset($this->renderers[$renderers])) {
             unset($this->renderers[$renderers]);
