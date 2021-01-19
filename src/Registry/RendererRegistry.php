@@ -31,24 +31,30 @@ class RendererRegistry
         }
 
         $this->renderers[$renderers::name()] = $renderers;
+        return self;
     }
 
     /**
-     * @param string $renderer Renderer name
+     * @param string|string[] $renderer Renderer name
      * @return bool
      */
-    public function remove($renderer)
+    public function remove($renderers)
     {
-        if(isset($this->renderers[$renderer])) {
-            unset($this->renderers[$renderer]);
-            return true;
+        if(is_array($renderers)) {
+            foreach ($renderers as $renderer) {
+                $this->remove($renderer);
+            }
         }
-        return false;
+        if(isset($this->renderers[$renderers])) {
+            unset($this->renderers[$renderers]);
+        }
+        return self;
     }
 
     public function clear()
     {
         $this->renderers = [];
+        return self;
     }
 
     /**
