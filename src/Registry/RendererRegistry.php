@@ -19,6 +19,7 @@ class RendererRegistry
 
     /**
      * @param RendererInterface|RendererInterface[] $renderers
+     * @return self
      */
     public function add($renderers)
     {
@@ -31,12 +32,12 @@ class RendererRegistry
         }
 
         $this->renderers[$renderers::name()] = $renderers;
-        return self;
+        return $this;
     }
 
     /**
      * @param string|string[] $renderer Renderer name
-     * @return bool
+     * @return self
      */
     public function remove($renderers)
     {
@@ -48,13 +49,16 @@ class RendererRegistry
         if(isset($this->renderers[$renderers])) {
             unset($this->renderers[$renderers]);
         }
-        return self;
+        return $this;
     }
 
+    /**
+     * @return self
+     */
     public function clear()
     {
         $this->renderers = [];
-        return self;
+        return $this;
     }
 
     /**
