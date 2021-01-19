@@ -46,6 +46,11 @@ class RendererRegistry
         return false;
     }
 
+    public function clear()
+    {
+        $this->renderers = [];
+    }
+
     /**
      * @param string $type
      * @return RendererInterface

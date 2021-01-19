@@ -253,4 +253,18 @@ class Phprosemirror {
             return strlen($string) && $string !== ' ';
         }));
     }
+
+    /**
+     * Query the prosemirror document
+     * @param string|null $json Prosemirror JSON
+     * @param bool $deep By default only query top level content, set to true to query child content
+     * @return QueryBuilder
+     */
+    public function query($json = null, $deep = false) {
+        if($json !== null) {
+            $this->document($json);
+        }
+
+        return new QueryBuilder($this->document, $deep);
+    }
 }
