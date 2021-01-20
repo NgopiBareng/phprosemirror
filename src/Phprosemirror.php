@@ -124,10 +124,7 @@ class Phprosemirror {
                     $markRenderer = $this->marks->get($mark->type);
                     if($markRenderer !== null) {
                         $markDOM = $markRenderer->toDOM($mark);
-                        if($dom instanceof PlainText) {
-                            $dom = [$dom];
-                        }
-                        $dom = $this->parseDOM($markDOM, $dom);
+                        $dom = $this->parseDOM($markDOM, [$dom]);
                     }
                 }
             }
