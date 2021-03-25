@@ -6,7 +6,7 @@
 			"content": [
 				{
 					"type": "text",
-					"text": "Text paragraph"
+					"text": "Text paragraph <img src=\"a\">"
 				}
 			]
 		},

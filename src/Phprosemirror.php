@@ -8,6 +8,7 @@ use stdClass;
 class Phprosemirror {
 
     protected $document;
+    protected bool $escape;
     public $nodes;
     public $marks;
 
@@ -97,7 +98,8 @@ class Phprosemirror {
         if(is_object($node)) {
             $contentDOM = null;
             if(isset($node->text)) {
-                $dom = new PlainText($node->text);
+                $text = ($this->escape ? htmlspecialchars($node->text) : $node->text);
+                $dom = new PlainText($text);
             } else {
                 if(isset($node->content)) {
                     $contentDOM = [];
@@ -139,6 +141,7 @@ class Phprosemirror {
         $attrs = '';
         if(is_array($dom->attrs) || $dom->attrs instanceof stdClass) {
             foreach ($dom->attrs as $attr => $value) {
+                $value = ($this->escape ? htmlspecialchars($value) : $value);
                 $attrs .= " $attr=\"$value\"";
             }
         }
@@ -165,7 +168,7 @@ class Phprosemirror {
         $text = [];
         if(is_object($node)) {
             if(isset($node->text)) {
-                $text[] = $node->text;
+                $text[] = htmlspecialchars($node->text);
             } else {
                 if(isset($node->content)) {
                     foreach ($node->content as $content) {
@@ -207,12 +210,14 @@ class Phprosemirror {
     /**
      * Converts ProseMirror Document to HTML. Returns empty string if the document are invalid.
      * @param string|null $json ProseMirror JSON
+     * @param bool $escape Whether to escape the content. Defaults to true
      * @return string
      */
-    public function toHTML($json = null) {
+    public function toHTML($json = null, $escape = true) {
         if($json !== null) {
             $this->document($json);
         }
+        $this->escape = $escape;
         $html = [];
 
         if($this->isDocumentValid()) {
@@ -223,6 +228,7 @@ class Phprosemirror {
                 $html[] = $this->renderDOM($dom);
             }
         }
+        $this->escape = true;
 
         return implode('', $html);
     }
@@ -230,12 +236,14 @@ class Phprosemirror {
     /**
      * Get text from ProseMirror Document. Returns empty string if the document are invalid.
      * @param string|null $json ProseMirror JSON
+     * @param bool $escape Whether to escape the content. Defaults to true
      * @return string
      */
-    public function toText($json = null) {
+    public function toText($json = null, $escape = true) {
         if($json !== null) {
             $this->document($json);
         }
+        $this->escape = $escape;
         $text = [];
 
         if($this->isDocumentValid()) {
@@ -245,6 +253,7 @@ class Phprosemirror {
                 $text = array_merge($text, $this->renderText($node));
             }
         }
+        $this->escape = true;
 
         return implode(' ', array_filter($text, function($string) {
             return strlen($string) && $string !== ' ';

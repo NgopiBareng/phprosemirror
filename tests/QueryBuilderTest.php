@@ -5,7 +5,7 @@ namespace Phprosemirror\Tests;
 class QueryBuilderTest extends TestBase
 {
     public function testType() {
-        $expected = '[{"type":"paragraph","content":[{"type":"text","text":"Text paragraph"}]},{"type":"paragraph","content":[{"type":"text","text":"Normal"},{"type":"paragraph","content":[{"type":"text","marks":[{"type":"link","attrs":{"href":"www.google.com","target":null}}],"text":"Link"}]},{"type":"text","marks":[{"type":"strike"}],"text":"Strike"},{"type":"text","text":" "},{"type":"text","marks":[{"type":"bold"}],"text":"bold"},{"type":"text","text":" "},{"type":"text","marks":[{"type":"italic"}],"text":"italic"},{"type":"text","text":" "},{"type":"text","marks":[{"type":"underline"}],"text":"underline"},{"type":"text","text":" "},{"type":"text","marks":[{"type":"bold"},{"type":"italic"},{"type":"strike"},{"type":"underline"}],"text":"combination of all"}]}]';
+        $expected = '[{"type":"paragraph","content":[{"type":"text","text":"Text paragraph <img src=\"a\">"}]},{"type":"paragraph","content":[{"type":"text","text":"Normal"},{"type":"paragraph","content":[{"type":"text","marks":[{"type":"link","attrs":{"href":"www.google.com","target":null}}],"text":"Link"}]},{"type":"text","marks":[{"type":"strike"}],"text":"Strike"},{"type":"text","text":" "},{"type":"text","marks":[{"type":"bold"}],"text":"bold"},{"type":"text","text":" "},{"type":"text","marks":[{"type":"italic"}],"text":"italic"},{"type":"text","text":" "},{"type":"text","marks":[{"type":"underline"}],"text":"underline"},{"type":"text","text":" "},{"type":"text","marks":[{"type":"bold"},{"type":"italic"},{"type":"strike"},{"type":"underline"}],"text":"combination of all"}]}]';
 
         $actual = $this->phprosemirror->query()
             ->where('type', 'paragraph')
