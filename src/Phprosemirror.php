@@ -63,14 +63,15 @@ class Phprosemirror {
             return $dom;
         } else if(is_array($dom)) {
             $result->tag = $dom[0];
-            $contents = [];
+            $contentIndex = 1;
 
-            if(isset($dom[1]) && ((is_array($dom[1]) && !isset($dom[1][0])) || $dom[1] instanceof stdClass)) {
+            // if dom has attributes
+            if((is_array($dom[1]) && !isset($dom[1][0])) || $dom[1] instanceof stdClass) {
                 $result->attrs = $dom[1];
-                $contents = array_slice($dom, 2);
-            } else if(count($dom) > 1) {
-                $contents = array_slice($dom, 1);
+                $contentIndex = 2;
             }
+
+            $contents = array_slice($dom, $contentIndex);
 
             if(count($contents) > 0) {
                 $result->content = [];
@@ -136,6 +137,9 @@ class Phprosemirror {
 
     private function renderDOM($dom) {
         if($dom === null) return '';
+        if($dom instanceof PlainText) {
+            return $dom->text;
+        }
 
         $html = [];
         $attrs = '';
