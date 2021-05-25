@@ -66,7 +66,7 @@ class Phprosemirror {
             $contentIndex = 1;
 
             // if dom has attributes
-            if((is_array($dom[1]) && !isset($dom[1][0])) || $dom[1] instanceof stdClass) {
+            if(isset($dom[1]) && ((is_array($dom[1]) && !isset($dom[1][0])) || $dom[1] instanceof stdClass)) {
                 $result->attrs = $dom[1];
                 $contentIndex = 2;
             }
