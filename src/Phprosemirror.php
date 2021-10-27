@@ -51,7 +51,7 @@ class Phprosemirror {
         );
     }
 
-    private function parseDOM($dom, $contentDOM) {
+    protected function parseDOM($dom, $contentDOM) {
         $result = (object) [
             'tag' => null,
             'attrs' => null,
@@ -94,7 +94,7 @@ class Phprosemirror {
         return ($result->tag === null ? null : $result);
     }
 
-    private function generateDOM($node) {
+    protected function generateDOM($node) {
         $dom = null;
         if(is_object($node)) {
             $contentDOM = null;
@@ -135,7 +135,7 @@ class Phprosemirror {
         return $dom;
     }
 
-    private function renderDOM($dom) {
+    protected function renderDOM($dom) {
         if($dom === null) return '';
         if($dom instanceof PlainText) {
             return $dom->text;
@@ -168,7 +168,7 @@ class Phprosemirror {
         return implode('', $html);
     }
 
-    private function renderText($node) {
+    protected function renderText($node) {
         $text = [];
         if(is_object($node)) {
             if(isset($node->text)) {
